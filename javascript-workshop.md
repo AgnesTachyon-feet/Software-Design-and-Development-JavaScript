@@ -186,11 +186,18 @@ let person = {
 2. สร้าง Object สำหรับเก็บข้อมูลนักศึกษา  ประกอบด้วยข้อมูล รหัสนักศึกษา, ชื่อ, สาขาวิชา, เกรดเฉลี่ย
 
 ### บันทึกผลการทดลอง 2.1
-```html
-[บันทึกโค้ด ที่นี่]
+```JavaScript
+const student = {
+    id: `6803036`,
+    name: `อรัญชัย คำเพ็ญ`,
+    midterm: 6,
+    final: 7,
+}
+
+console.log(student);
 ```
 **รูปผลการทดลอง**
-![รูปผลการทดลองที่ 2.1](images/image.png)
+![j1.png](j1.png)
 
 
 ### 2.2 การดำเนินการทางคณิตศาสตร์
@@ -241,11 +248,24 @@ number /= 2;          // เท่ากับ number = number / 2
 2. เขียนโปรแกรม กำหนดชื่อสินค้า ราคาสินค้า คำนวณราคาสินค้าที่รวม VAT 7% แล้วแสดงผลการคำนวณ
 
 ### บันทึกผลการทดลอง 2.2
-```html
-[บันทึกโค้ด ที่นี่]
+```JavaScirpt
+let math = 5
+let program = 10
+let english = 15
+
+let sum = math + program + english
+let average = sum / 3
+
+console.log("Average Subject: " + average)
+
+let vat = calculateVAT(10000, "laptop");
+function calculateVAT(price, product){ 
+    let vat = price * 0.07;
+    console.log("VAT for " + product + " is " + vat);
+}
 ```
 **รูปผลการทดลอง**
-![รูปผลการทดลองที่ 2.2](images/image.png)
+![alt text](j2.png)
 
 ### 2.3 การควบคุมการทำงาน
 
@@ -375,11 +395,50 @@ for (let i = 1; i <= 5; i++) {
 4. เขียนโปรแกรมกำหนดอายุ และตรวจสอบช่วงวัยตามอายุที่กำหนด (กำหนดอายุแต่ละช่วงวัย วัยเด็ก วัยรุ่น วัยผู้ใหญ่)
 
 ### บันทึกผลการทดลอง 2.3
-```html
-[บันทึกโค้ด ที่นี่]
+```JavaScript
+function checkmod(num){
+    if (num % 2 == 0){
+        console.log(num + " is even");
+    }
+    else{
+        console.log(num + " is odd");
+    }
+}
+cal = checkmod(4);
+cal = checkmod(7);
+
+function mp(){
+    console.log("Multiplication Table of 2");
+    for (let i = 1; i <= 12; i++){
+        console.log(`2 x ${i} = ${i*2}`);
+    }
+    console.log("Multiplication Table of 3");
+    for (let i = 1; i <= 12; i++){
+        console.log(`3 x ${i} = ${i*3}`);
+    }
+}
+
+let cal2 = mp();
+
+function nub(){
+    for (let i = 10; i >= 1; i--){
+        console.log(`นับ ${i}`);
+    }
+}
+let cal3 = nub();
+
+function ch_age(age){
+    if (age >= 18){
+        console.log("You are an adult.");
+    }
+    else{
+        console.log("You are a minor.");
+    }
+}
+let cal4 = ch_age(20);
 ```
 **รูปผลการทดลอง**
-![รูปผลการทดลองที่ 2.3](images/image.png)
+![alt text](j3.png)
 
 ### 2.4 Functions และ Arrow Functions
 
@@ -490,11 +549,40 @@ process(function() {
 3. เขียน function ตรวจสอบรหัสผ่านว่ามีความยาวมากกว่า 8 ตัวอักษรหรือไม่
 
 ### บันทึกผลการทดลอง 2.4.1
-```html
-[บันทึกโค้ด ที่นี่]
+```JavaScript
+function bmical(weight, height) {
+    let bmi = weight / (height * height);
+    console.log("BMI is: " + bmi.toFixed(2)); 
+}
+bmical(67, 1.75);
+
+function x(name, age){
+    if(age < 13){
+        console.log(`ว่าไง ${name} ยังเล็กอยู่เลย ;)`);
+    }
+    else if(age >= 13 && age < 20){
+        console.log(`ว่าไงวัยรุ่น ${name} `);
+    }
+    else if(age >= 20 && age < 30){
+        console.log(`ว่าไง ${name} วัยทำงานแล้วนะ`);
+    }
+}
+x("John", 10);
+x("Jane", 15);
+x("Doe", 25);
+
+function yaa(password) {
+    if(password.length > 8){
+        console.log("รหัสผ่านต้องมีความยาวอย่างมากกว่า 8 ตัวอักษร");
+    }
+    else{
+        console.log("รหัสผ่านยาวไม่พอไม่ถึง 8 ตัวอักษร");
+    }
+}
+yaa("hahaha");
 ```
 **รูปผลการทดลอง**
-![รูปผลการทดลองที่ 2.4.1](images/image.png)
+![alt text](j4.png)
 
 
 
@@ -534,11 +622,32 @@ console.log("เลขคู่:", evenNumbers); // [2, 4]
 3. เขียน function ตรวจสอบรหัสผ่านว่ามีความยาวมากกว่า 8 ตัวอักษรหรือไม่
 
 ### บันทึกผลการทดลอง 2.4.2
-```html
-[บันทึกโค้ด ที่นี่]
+```JavaScript
+const bmical = (weight, height) => {
+    let bmi = weight / (height * height);
+    console.log(`BMI is: ${bmi.toFixed(2)}`);
+};
+bmical(67, 1.75);
+
+const x = (name, age) => {
+    if (age < 13) console.log(`ว่าไง ${name} ยังเล็กอยู่เลย ;)`);
+    else if (age < 20) console.log(`ว่าไงวัยรุ่น ${name}`);
+    else if (age < 30) console.log(`ว่าไง ${name} วัยทำงานแล้วนะ`);
+};
+x("John", 10);
+x("Jane", 15);
+x("Doe", 25);
+
+const yaa = (password) => {
+    console.log(password.length > 8 
+        ? "รหัสผ่านต้องมีความยาวอย่างมากกว่า 8 ตัวอักษร" 
+        : "รหัสผ่านยาวไม่พอไม่ถึง 8 ตัวอักษร"
+    );
+};
+yaa("hahaha");
 ```
 **รูปผลการทดลอง**
-![รูปผลการทดลองที่ 2.4.2](images/image.png)
+![alt text](j5.png)
 
 
 ## การทดลองที่ 3 : การใช้ JavaScript กับ HTML และ CSS
@@ -606,10 +715,42 @@ console.log("เลขคู่:", evenNumbers); // [2, 4]
 
 ### บันทึกผลการทดลอง 3.1
 ```html
-[บันทึกโค้ด ที่นี่]
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BMI Calculator</title>
+</head>
+<body>
+    <h2>คำนวณ BMI</h2>
+    น้ำหนัก (kg): <input type="number" id="weight"> <br>
+    ส่วนสูง (m): <input type="number" id="height"> <br>
+    <button onclick="calculateBMI()">คำนวณเลย</button>
+    
+    <p id="result"></p>
+
+    <script>
+    const calculateBMI = () => {
+        const w = parseFloat(document.getElementById('weight').value);
+        const h = parseFloat(document.getElementById('height').value);
+        
+        // Arrow function ตัวคำนวณ BMI
+        const getBMI = (weight, height) => weight / (height * height);
+        
+        const bmi = getBMI(w, h);
+        let status = "";
+
+        if (bmi < 18.5) status = "ผอม";
+        else if (bmi < 25) status = "สมส่วน";
+        else status = "อ้วน";
+
+        document.getElementById('result').innerHTML = `ค่า BMI ของคุณคือ ${bmi.toFixed(2)} (${status})`;
+    };
+    </script>
+</body>
+</html>
 ```
 **รูปผลการทดลอง**
-![รูปผลการทดลองที่ 3.1](images/image.png)
+![alt text](j6.png)
 
 ## การทดลองที่ 3.2 : การสร้างฟอร์มสำหรับจองห้องพัก
 การสร้างฟอร์มลงทะเบียนเพื่อรวบรวมข้อมูลที่จำเป็นสำหรับการจองห้องพัก
@@ -769,10 +910,138 @@ console.log("เลขคู่:", evenNumbers); // [2, 4]
 
 ### บันทึกผลการทดลอง 3.2.2
 ```html
-[บันทึกโค้ด ที่นี่]
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจองห้องพักออนไลน์</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>แบบฟอร์มจองห้องพัก</h1>
+    
+    <form id="bookingForm">
+        <div>
+            <label for="fullname">ชื่อ-นามสกุล:</label>
+            <input type="text" id="fullname" name="fullname" required>
+        </div>
+
+        <div>
+            <label for="email">อีเมล:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div>
+            <label for="phone">เบอร์โทรศัพท์:</label>
+            <input type="tel" id="phone" name="phone" required>
+        </div>
+
+        <div>
+            <label for="checkin">วันที่เช็คอิน:</label>
+            <input type="date" id="checkin" name="checkin" required>
+        </div>
+
+        <div>
+            <label for="checkout">วันที่เช็คเอาท์:</label>
+            <input type="date" id="checkout" name="checkout" required>
+        </div>
+
+        <div>
+            <label for="roomtype">ประเภทห้องพัก:</label>
+            <select id="roomtype" name="roomtype" required>
+                <option value="">กรุณาเลือกประเภทห้องพัก</option>
+                <option value="standard">ห้องมาตรฐาน</option>
+                <option value="deluxe">ห้องดีลักซ์</option>
+                <option value="suite">ห้องสวีท</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="guests">จำนวนผู้เข้าพัก:</label>
+            <input type="number" id="guests" name="guests" min="1" max="4" required>
+        </div>
+
+        <button type="submit">จองห้องพัก</button>
+    </form>
+</body>
+</html>
 ```
+```css
+body {
+  font-family: "Sarabun", sans-serif;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+h1 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+div {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #34495e;
+  font-weight: bold;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #db3934;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+button {
+  background-color: #db7a39;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+
+button:hover {
+  background-color: #e68a4c;
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+}
+```
+
+
+##### เปลี่ยนสี ปุ่มจองห้องพัก
 **รูปผลการทดลอง**
-![รูปผลการทดลองที่ 3.2.2](images/image.png)
+![alt text](j7.png)
 
 
 ## ขั้นตอนที่ 3.2.3: การเพิ่มฟังก์ชันด้วย JavaScript
@@ -870,15 +1139,17 @@ console.log("เลขคู่:", evenNumbers); // [2, 4]
    - ปรับจำนวนผู้เข้าพักสูงสุดตามประเภทห้อง
 </body>
 </html>
-```
+
 
 ### ผลการทดลอง
 ทดสอบปรับแต่ง JavaScript ในแต่ละส่วน แล้วอธิบายโค้ดในแต่ละส่วน เขียนสรุปผลการทดลองว่าได้ทดลองเปลี่ยนส่วนใด แล้วผลเป็นอย่างไร พร้อมแนบรูปประกอบการทดลอง
 
 ### บันทึกผลการทดลอง 3.2.3
-```html
+```
+html
 [บันทึกโค้ด ที่นี่]
 ```
+
 **รูปผลการทดลอง**
 ![รูปผลการทดลองที่ 3.2.3](images/image.png)
 
