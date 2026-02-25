@@ -5,19 +5,33 @@
     <title>ทดลอง JavaScript</title>
 </head>
 <body>
+    <form action>
+        <label for="name">ชื่อ:</label>
+        <input type="text" id="name" name="name">
+        <button onclick="alert(document.getElementById('name').value)">ยืนยัน</button>
+    </form>
+    <form action>
+        <label for="date">วันที่:</label>
+        <input type="text" id="date" name="date">
+        <button id="btn2">ยืนยัน</button>
+    </form>
+
+    <form action>
+        <label for="time">เวลา:</label>
+        <input type="text" id="time" name="time">
+        <button id="btn3" onclick="hello3();">ยืนยัน</button>
+    </form>
+    
     <!-- Inline JavaScript -->
-    <button onclick="alert('อรัญชัย คำเพ็ญ')">ปุ่มที่ 1</button>
+    
 
     <!-- ทดสอบ Internal JavaScript -->
-    <button id="btn2">ปุ่มที่ 2</button>
-
-    <!-- ทดสอบ External JavaScript -->
-    <button id="btn3" onclick="hello3();">ปุ่มที่ 3</button>
+    
 
     <!-- Internal JavaScript -->
     <script>
         document.getElementById('btn2').onclick = function() {
-            alert('อรัญชัย คำเพ็ญ');
+            alert('date: ' + document.getElementById('date').value);
         };
     </script>
 
