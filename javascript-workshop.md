@@ -76,10 +76,63 @@ JavaScript สามารถเพิ่มลงในเว็บเพจไ
    - มีปุ่มเมื่อคลิกแล้วจะแสดงข้อความที่กรอกในช่องข้อความ  (สามารถใช้ document.getElementById('id ของ textbox').value เพื่อดึงข้อมูลในช่อง)
 ### บันทึกผลการทดลอง 
 ```html
-[บันทึกโค้ด ที่นี่]
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ทดลอง JavaScript</title>
+</head>
+<body>
+    <form>
+        <label for="name">ชื่อ:</label>
+        <input type="text" id="name" name="name">
+        <button onclick="alert(document.getElementById('name').value)">ยืนยัน</button>
+    </form>
+    <form>
+        <label for="date">วันที่:</label>
+        <input type="text" id="date" name="date">
+        <button id="btn2">ยืนยัน</button>
+    </form>
+
+    <form>
+        <label for="time">เวลา:</label>
+        <input type="text" id="time" name="time">
+        <button id="btn3" onclick="hello3();">ยืนยัน</button>
+    </form>
+    
+    <!-- Inline JavaScript -->
+    
+
+    <!-- ทดสอบ Internal JavaScript -->
+    
+
+    <!-- Internal JavaScript -->
+    <script>
+        document.getElementById('btn2').onclick = function() {
+            alert('date: ' + document.getElementById('date').value);
+        };
+    </script>
+
+    <!-- External JavaScript -->
+  <!-- ต้องสร้างไฟล์ script.js มีโค้ดโปรแกรมในไฟล์ดังนี้
+   function hello3(){
+    alert('คลิกปุ่มที่ 3!');
+    }
+ -->
+    <script src="script.js"></script>
+</body>
+</html>
 ```
+```JavaScript
+function hello3(){
+    alert('เวลา: ' + document.getElementById('time').value);
+        
+}
+```
+
 **รูปผลการทดลอง**
-![รูปผลการทดลองที่ 1](images/image.png)
+![!\[รูปผลการทดลองที่ 1\]
+1/image.png](1/image.png)
 
 ## การทดลองที่ 2: พื้นฐาน JavaScript
 ### 2.1 การประกาศตัวแปรและชนิดข้อมูล
