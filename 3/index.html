@@ -55,76 +55,103 @@
         <button type="submit">จองห้องพัก</button>
     </form>
     <script>
-        document.getElementById('bookingForm').addEventListener('submit', function (e) {
-            e.preventDefault();
+        // อัปเกรดเป็น Arrow Function ทั้งหมด และเพิ่มความเฟี้ยว!
 
-            // ตรวจสอบวันที่
+        // 1. กำหนดราคาห้องพัก (ซ่อนไว้คำนวณ)
+        const roomPrices = { standard: 1200, deluxe: 2500, suite: 4500 };
+
+        // 2. แอบสร้าง Element โชว์ราคารวมแบบหล่อๆ ด้วย JS แทรกไว้ก่อนปุ่ม Submit
+        const priceDisplay = document.createElement('div');
+        priceDisplay.style.cssText = 'font-size: 1.2em; color: #db7a39; font-weight: bold; text-align: center; margin-top: 10px; margin-bottom: 15px; transition: 0.3s;';
+        document.getElementById('bookingForm').insertBefore(priceDisplay, document.querySelector('button[type="submit"]'));
+
+        // 3. ฟังก์ชันคำนวณราคาแบบ Real-time
+        const updatePrice = () => {
             const checkin = new Date(document.getElementById('checkin').value);
             const checkout = new Date(document.getElementById('checkout').value);
+            const room = document.getElementById('roomtype').value;
+
+            // ถ้าเลือกครบ ถึงจะคำนวณ
+            if (checkin && checkout && checkout > checkin && room) {
+                const days = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
+                const total = days * roomPrices[room];
+                priceDisplay.innerHTML = `💸 ราคารวมโดยประมาณ: ฿${total.toLocaleString()} (${days} คืน)`;
+            } else {
+                priceDisplay.innerHTML = '';
+            }
+        };
+
+        // จับ Event เพื่ออัปเดตราคาแบบ Real-time
+        ['checkin', 'checkout', 'roomtype'].forEach(id => {
+            document.getElementById(id).addEventListener('change', updatePrice);
+        });
+
+        // 4. บล็อกให้เบอร์โทรพิมพ์ได้แค่ตัวเลข ไม่เกิน 10 หลัก (ฟีเจอร์กันคนเด๋อ)
+        document.getElementById('phone').addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+        });
+
+        // 5. จัดการตอนกดจอง (Main Submit Event)
+        document.getElementById('bookingForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const checkinVal = document.getElementById('checkin').value;
+            const checkoutVal = document.getElementById('checkout').value;
+
+            const checkin = new Date(checkinVal);
+            const checkout = new Date(checkoutVal);
+
+            // แก้บั๊กเวลาให้เป๊ะ ไม่บล็อกลูกค้าที่จองวันปัจจุบัน
             const today = new Date();
+            today.setHours(0, 0, 0, 0);
 
-            if (checkin < today) {
-                alert('กรุณาเลือกวันเช็คอินที่ยังไม่ผ่านมา');
-                return;
-            }
+            if (checkin < today) return alert('❌ กรุณาเลือกวันเช็คอินที่ยังไม่ผ่านมา');
+            if (checkout <= checkin) return alert('❌ วันเช็คเอาท์ต้องมาหลังวันเช็คอิน');
 
-            if (checkout <= checkin) {
-                alert('วันเช็คเอาท์ต้องมาหลังวันเช็คอิน');
-                return;
-            }
-
-            // ตรวจสอบรูปแบบเบอร์โทร
             const phone = document.getElementById('phone').value;
-            const phoneRegex = /^[0-9]{10}$/;
-            if (!phoneRegex.test(phone)) {
-                alert('กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง (10 หลัก)');
-                return;
-            }
+            if (phone.length !== 10) return alert('📱 กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก');
 
-            // คำนวณจำนวนวันที่พัก
             const days = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
-
-            // แสดงสรุปการจอง
             const roomtype = document.getElementById('roomtype');
             const roomtypeText = roomtype.options[roomtype.selectedIndex].text;
+            const total = days * roomPrices[roomtype.value];
 
+            // ใส่ Emoji ให้ Alert ดูน่าอ่านขึ้น (เฟี้ยวขึ้นนิดนึง)
             const summary = `
-            สรุปการจอง:
-            - ชื่อผู้จอง: ${document.getElementById('fullname').value}
-            - ประเภทห้อง: ${roomtypeText}
-            - วันที่เข้าพัก: ${checkin.toLocaleDateString('th-TH')}
-            - วันที่ออก: ${checkout.toLocaleDateString('th-TH')}
-            - จำนวนวันที่พัก: ${days} วัน
-            - จำนวนผู้เข้าพัก: ${document.getElementById('guests').value} ท่าน
-        `;
+🧾 สรุปการจองของคุณ:
+------------------------
+👤 ชื่อ: ${document.getElementById('fullname').value}
+🛏️ ห้อง: ${roomtypeText}
+📅 เช็คอิน: ${checkin.toLocaleDateString('th-TH')}
+📅 เช็คเอาท์: ${checkout.toLocaleDateString('th-TH')}
+🌙 จำนวน: ${days} คืน
+👥 ผู้เข้าพัก: ${document.getElementById('guests').value} ท่าน
+💰 ยอดชำระ: ฿${total.toLocaleString()}
+------------------------
+    `;
 
-            if (confirm(summary + '\n\nยืนยันการจองห้องพัก?')) {
-                alert('จองห้องพักเรียบร้อยแล้ว');
-                this.reset();
+            if (confirm(summary + '\nยืนยันการทำรายการหรือไม่?')) {
+                alert('🎉 จองห้องพักเรียบร้อยแล้ว ขอบคุณที่ใช้บริการครับ!');
+                e.target.reset(); // ล้างฟอร์ม
+                priceDisplay.innerHTML = ''; // ล้างราคา
             }
         });
 
-        // เพิ่มการตรวจสอบวันที่แบบ Real-time
-        document.getElementById('checkin').addEventListener('change', function () {
-            document.getElementById('checkout').min = this.value;
+        // 6. เช็ควันที่และจำนวนคน (ใช้ Arrow Function ให้หมด)
+        document.getElementById('checkin').addEventListener('change', (e) => {
+            document.getElementById('checkout').min = e.target.value;
         });
 
-        // จำกัดจำนวนผู้เข้าพักตามประเภทห้อง
-        document.getElementById('roomtype').addEventListener('change', function () {
+        document.getElementById('roomtype').addEventListener('change', (e) => {
             const guestsInput = document.getElementById('guests');
-            if (this.value === 'standard') {
-                guestsInput.max = 2;
-            } else if (this.value === 'deluxe') {
-                guestsInput.max = 3;
-            } else if (this.value === 'suite') {
-                guestsInput.max = 4;
-            }
+            // ใช้ Object Mapping เท่ๆ แทน if-else ยาวๆ
+            const maxGuests = { 'standard': 2, 'deluxe': 3, 'suite': 4 }[e.target.value] || 4;
 
-            if (guestsInput.value > guestsInput.max) {
-                guestsInput.value = guestsInput.max;
-            }
+            guestsInput.max = maxGuests;
+            if (guestsInput.value > maxGuests) guestsInput.value = maxGuests;
         });
     </script>
+
 </body>
 
 </html>

@@ -1147,11 +1147,239 @@ button:hover {
 ### บันทึกผลการทดลอง 3.2.3
 ```
 html
-[บันทึกโค้ด ที่นี่]
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจองห้องพักออนไลน์</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1>แบบฟอร์มจองห้องพัก</h1>
+
+    <form id="bookingForm">
+        <div>
+            <label for="fullname">ชื่อ-นามสกุล:</label>
+            <input type="text" id="fullname" name="fullname" required>
+        </div>
+
+        <div>
+            <label for="email">อีเมล:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div>
+            <label for="phone">เบอร์โทรศัพท์:</label>
+            <input type="tel" id="phone" name="phone" required>
+        </div>
+
+        <div>
+            <label for="checkin">วันที่เช็คอิน:</label>
+            <input type="date" id="checkin" name="checkin" required>
+        </div>
+
+        <div>
+            <label for="checkout">วันที่เช็คเอาท์:</label>
+            <input type="date" id="checkout" name="checkout" required>
+        </div>
+
+        <div>
+            <label for="roomtype">ประเภทห้องพัก:</label>
+            <select id="roomtype" name="roomtype" required>
+                <option value="">กรุณาเลือกประเภทห้องพัก</option>
+                <option value="standard">ห้องมาตรฐาน</option>
+                <option value="deluxe">ห้องดีลักซ์</option>
+                <option value="suite">ห้องสวีท</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="guests">จำนวนผู้เข้าพัก:</label>
+            <input type="number" id="guests" name="guests" min="1" max="4" required>
+        </div>
+
+        <button type="submit">จองห้องพัก</button>
+    </form>
+    <script>
+        // อัปเกรดเป็น Arrow Function ทั้งหมด และเพิ่มความเฟี้ยว!
+
+        // 1. กำหนดราคาห้องพัก (ซ่อนไว้คำนวณ)
+        const roomPrices = { standard: 1200, deluxe: 2500, suite: 4500 };
+
+        // 2. แอบสร้าง Element โชว์ราคารวมแบบหล่อๆ ด้วย JS แทรกไว้ก่อนปุ่ม Submit
+        const priceDisplay = document.createElement('div');
+        priceDisplay.style.cssText = 'font-size: 1.2em; color: #db7a39; font-weight: bold; text-align: center; margin-top: 10px; margin-bottom: 15px; transition: 0.3s;';
+        document.getElementById('bookingForm').insertBefore(priceDisplay, document.querySelector('button[type="submit"]'));
+
+        // 3. ฟังก์ชันคำนวณราคาแบบ Real-time
+        const updatePrice = () => {
+            const checkin = new Date(document.getElementById('checkin').value);
+            const checkout = new Date(document.getElementById('checkout').value);
+            const room = document.getElementById('roomtype').value;
+
+            // ถ้าเลือกครบ ถึงจะคำนวณ
+            if (checkin && checkout && checkout > checkin && room) {
+                const days = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
+                const total = days * roomPrices[room];
+                priceDisplay.innerHTML = `💸 ราคารวมโดยประมาณ: ฿${total.toLocaleString()} (${days} คืน)`;
+            } else {
+                priceDisplay.innerHTML = '';
+            }
+        };
+
+        // จับ Event เพื่ออัปเดตราคาแบบ Real-time
+        ['checkin', 'checkout', 'roomtype'].forEach(id => {
+            document.getElementById(id).addEventListener('change', updatePrice);
+        });
+
+        // 4. บล็อกให้เบอร์โทรพิมพ์ได้แค่ตัวเลข ไม่เกิน 10 หลัก (ฟีเจอร์กันคนเด๋อ)
+        document.getElementById('phone').addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+        });
+
+        // 5. จัดการตอนกดจอง (Main Submit Event)
+        document.getElementById('bookingForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const checkinVal = document.getElementById('checkin').value;
+            const checkoutVal = document.getElementById('checkout').value;
+
+            const checkin = new Date(checkinVal);
+            const checkout = new Date(checkoutVal);
+
+            // แก้บั๊กเวลาให้เป๊ะ ไม่บล็อกลูกค้าที่จองวันปัจจุบัน
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (checkin < today) return alert('❌ กรุณาเลือกวันเช็คอินที่ยังไม่ผ่านมา');
+            if (checkout <= checkin) return alert('❌ วันเช็คเอาท์ต้องมาหลังวันเช็คอิน');
+
+            const phone = document.getElementById('phone').value;
+            if (phone.length !== 10) return alert('📱 กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก');
+
+            const days = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
+            const roomtype = document.getElementById('roomtype');
+            const roomtypeText = roomtype.options[roomtype.selectedIndex].text;
+            const total = days * roomPrices[roomtype.value];
+
+            // ใส่ Emoji ให้ Alert ดูน่าอ่านขึ้น (เฟี้ยวขึ้นนิดนึง)
+            const summary = `
+🧾 สรุปการจองของคุณ:
+------------------------
+👤 ชื่อ: ${document.getElementById('fullname').value}
+🛏️ ห้อง: ${roomtypeText}
+📅 เช็คอิน: ${checkin.toLocaleDateString('th-TH')}
+📅 เช็คเอาท์: ${checkout.toLocaleDateString('th-TH')}
+🌙 จำนวน: ${days} คืน
+👥 ผู้เข้าพัก: ${document.getElementById('guests').value} ท่าน
+💰 ยอดชำระ: ฿${total.toLocaleString()}
+------------------------
+    `;
+
+            if (confirm(summary + '\nยืนยันการทำรายการหรือไม่?')) {
+                alert('🎉 จองห้องพักเรียบร้อยแล้ว ขอบคุณที่ใช้บริการครับ!');
+                e.target.reset(); // ล้างฟอร์ม
+                priceDisplay.innerHTML = ''; // ล้างราคา
+            }
+        });
+
+        // 6. เช็ควันที่และจำนวนคน (ใช้ Arrow Function ให้หมด)
+        document.getElementById('checkin').addEventListener('change', (e) => {
+            document.getElementById('checkout').min = e.target.value;
+        });
+
+        document.getElementById('roomtype').addEventListener('change', (e) => {
+            const guestsInput = document.getElementById('guests');
+            // ใช้ Object Mapping เท่ๆ แทน if-else ยาวๆ
+            const maxGuests = { 'standard': 2, 'deluxe': 3, 'suite': 4 }[e.target.value] || 4;
+
+            guestsInput.max = maxGuests;
+            if (guestsInput.value > maxGuests) guestsInput.value = maxGuests;
+        });
+    </script>
+
+</body>
+
+</html>
+```
+```css
+body {
+  font-family: "Sarabun", sans-serif;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+h1 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+div {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #34495e;
+  font-weight: bold;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #db3934;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+button {
+  background-color: #db7a39;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+
+button:hover {
+  background-color: #e68a4c;
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+}
 ```
 
 **รูปผลการทดลอง**
-![รูปผลการทดลองที่ 3.2.3](images/image.png)
+![alt text](j8.png)
+![alt text](j8_1.png)
+![alt text](j8_2.png)
 
 
 ## คำแนะนำเพิ่มเติม
